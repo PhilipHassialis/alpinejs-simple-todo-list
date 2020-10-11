@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet"
+        href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha2/css/bootstrap.min.css"
+        integrity="sha384-DhY6onE6f3zzKbjUPRc2hOzGAdEf4/Dz+WJwBvEYL/lkkIsI3ihufq9hk9K4lVoK"
+        crossorigin="anonymous">
+    <script
+        src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"
+        defer></script>
+    <style>
+        .todoActive {
+            cursor: pointer;
+        }
+
+        .todoPerformed {
+            cursor: pointer;
+            text-decoration: line-through;
+            font-style: italic;
+        }
+
+        .todoEditingEditButton {
+            cursor: not-allowed !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container" x-data="{todos:[], newTodo:''}">
+        <div class="card-body">
+            <h2 class="card-title">Todo List</h2>
+            <div class="row">
+                <div class="col-auto">
+                    <input x-model="newTodo" type="text" class="form-control">
+                </div>
+                <div class="col-auto">
+                    <button
+                        @click="todos.push({todoText:newTodo, todoId:(new Date()).getTime(), peformed:false, editing:false }); newTodo=''; "
+                        class="btn btn-success">Add</button>
+                </div>
+            </div>
+            <div class="card-text">
+                <template x-for="todo in todos">
+                    <div class="row m-2">
+                        <div class="col-6" x-show="!todo.editing">
+                            <span x-text="todo.todoText"
+                                x-bind:class="{ 'todoPerformed':todo.performed , 'todoActive':!todo.performed }"
+                                @click="todo.performed=!todo.performed">
+                            </span>
+                        </div>
+                        <div class="col-6" x-show="todo.editing">
+                            <input x-model="todo.todoText">
+                            <button class="btn btn-success"
+                                @click="todo.editing=!todo.editing">Update</button>
+                        </div>
+                        <div class="col-2">
+                            <span
+                                x-bind:class="{ 'todoEditingEditButton':todo.editing }">
+                                <button class="btn btn-primary"
+                                    x-bind:disabled="todo.editing"
+                                    @click="todo.editing=!todo.editing">Edit</button>
+                            </span>
+                            <span
+                                x-bind:class="{ 'todoEditingEditButton':todo.editing }">
+                                <button class="btn btn-danger"
+                                    x-bind:disabled="todo.editing"
+                                    @click="todos = todos.filter(t=>t.todoId!=todo.todoId)">Remove</button>
+
+                            </span>
+                        </div>
+
+                    </div>
+                </template>
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
